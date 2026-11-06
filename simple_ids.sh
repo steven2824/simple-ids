@@ -19,7 +19,7 @@ chmod 600 "$LOG_FILE"
 
 					alert="User: $user | TTY: $tty | PID: $pid | IP: $ip"
 					echo "[$timestamp] ROOT LOGIN: $alert" >> "$LOG_FILE"
-					echo -e "[ROOT LOGIN: $alert]" > "$MY_TTY" 2>/dev/null
+					echo -e "[ROOT LOGIN: $alert\n]" > "$MY_TTY" 2>/dev/null
 				done <<< "$new_logins"
 			fi
 		fi
