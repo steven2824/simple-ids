@@ -20,6 +20,8 @@ chmod 600 "$LOG_FILE"
 					alert="User: $user | TTY: $tty | PID: $pid | IP: $ip"
 					echo "[$timestamp] ROOT LOGIN: $alert" >> "$LOG_FILE"
 					echo -e "[ROOT LOGIN: $alert\n]" > "$MY_TTY" 2>/dev/null
+					# uncomment if you want to immediately kick the new root login out
+					# $(kill -9 $pid)
 				done <<< "$new_logins"
 			fi
 		fi
