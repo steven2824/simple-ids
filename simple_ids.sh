@@ -24,11 +24,11 @@ INSTANT_KILL=false
 					echo "[$timestamp] ROOT LOGIN: $alert" >> "$LOG_FILE"
 					echo -e "[ROOT LOGIN: $alert\n]" > "$MY_TTY" 2>/dev/null
 
-					if [ "$INSTANT_KILL" = true ]; then
-						if [ "$tty" != "$MY_TTY#/dev/" ]; then
+					if $INSTANT_KILL; then
+						if [ "$tty" != "${MY_TTY#/dev/}" ]; then
 							kill -9 $pid 2>/dev/null
 							echo "Killed PID $pid from IP $ip" >> "$LOG_FILE"
-							echo -e "Killed PID $pid from IP $ip" > "MY_TTY" 2>/dev/null
+							echo -e "Killed PID $pid from IP $ip" > "$MY_TTY" 2>/dev/null
 						fi
 					fi
 
