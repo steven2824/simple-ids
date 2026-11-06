@@ -5,6 +5,9 @@ MY_TTY=$(tty)
 touch "$LOG_FILE"
 chmod 600 "$LOG_FILE"
 
+# change to true if you want new root sessions to be immediately killed
+INSTANT_KILL=false
+
 (
 	last=$(who -u | awk '$1 == "root" { print $1 "|" $2 "|" $6 "|" $NF }' | sort)
 	while true; do
@@ -20,8 +23,15 @@ chmod 600 "$LOG_FILE"
 					alert="User: $user | TTY: $tty | PID: $pid | IP: $ip"
 					echo "[$timestamp] ROOT LOGIN: $alert" >> "$LOG_FILE"
 					echo -e "[ROOT LOGIN: $alert\n]" > "$MY_TTY" 2>/dev/null
-					# uncomment if you want to immediately kick the new root login out
-					# $(kill -9 $pid)
+
+					if [ "$INSTANT_KILL" = true ]; then
+						if [ "$tty" != "$MY_TTY#/dev/" ]; then
+							kill -9 $pid 2>/dev/null
+							echo "Killed PID $pid from IP $ip" >> "$LOG_FILE"
+							echo -e "Killed PID $pid from IP $ip" > "MY_TTY" 2>/dev/null
+						fi
+					fi
+
 				done <<< "$new_logins"
 			fi
 		fi
